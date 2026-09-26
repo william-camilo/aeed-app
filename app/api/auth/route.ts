@@ -1,4 +1,3 @@
-import { env } from 'cloudflare:workers';
 import { z } from 'zod';
 import { database, sha256, passwordHash, cookie, currentUser, sameOrigin } from '@/lib/db';
 
