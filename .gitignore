@@ -44,3 +44,18 @@ next-env.d.ts
 /.codex/
 /outputs/
 /work/
+# local Sites workflow helpers copied during source recovery
+/build-site.mjs
+/configure-execution-profile.mjs
+/debug-workflow.mjs
+/install-dependencies.mjs
+/install-report.mjs
+/package-manager.mjs
+/package-site.mjs
+/pnpm-bootstrap.mjs
+/project-setup.mjs
+/set-project-id.mjs
+/site-workflow.mjs
+/validate-pnpm.mjs
+/workflow-metrics.mjs
+/.pnpm-store/

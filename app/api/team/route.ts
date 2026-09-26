@@ -1,0 +1,3 @@
+import { database, userIdentity } from '@/lib/db';
+const json=(data:unknown,status=200)=>Response.json(data,{status,headers:{'Cache-Control':'no-store'}});
+export async function GET(req:Request){try{const actor=await userIdentity(req);if(actor.role==='attendant')return json({error:'A área de gestão exige um perfil de gestor.'},403);const db=database();const users=await db.prepare('SELECT u.id,u.name,u.email,u.role,u.created_at,MAX(s.last_activity) AS last_activity,MAX(CASE WHEN s.active=1 THEN 1 ELSE 0 END) AS online FROM users u LEFT JOIN sessions s ON s.user_id=u.id WHERE u.company_id=? GROUP BY u.id ORDER BY u.created_at').bind(actor.companyId).all();return json({users:users.results});}catch(e){return json({error:'Sessão inválida.'},401)}}
