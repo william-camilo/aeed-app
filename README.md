@@ -25,7 +25,9 @@ As tabelas `users` e `sessions` estão na migração `drizzle/0001_auth_sessions
 O primeiro cadastro recebe o perfil gestor. Depois disso, somente gestores criam contas de atendente pela API `/api/team`; atendentes não veem a área de gestão. Para aplicar a migração em um ambiente D1 existente, rode `wrangler d1 migrations apply DB --remote` depois de publicar o arquivo SQL.
 
 ## GitHub e Vercel
-O código está organizado como um repositório Git comum, com lockfile preservado e um workflow de verificação em `.github/workflows/ci.yml`. Para publicar uma cópia no GitHub, crie um repositório vazio e execute `git remote add origin <URL>` e `git push -u origin main`.
+O código está organizado como um repositório Git comum, com lockfile preservado e um workflow de verificação em `.github/workflows/ci.yml`. Para publicar uma cópia no GitHub, crie um repositório vazio e execute o arquivo [`publicar-github.bat`](./publicar-github.bat). Ele solicita a URL do repositório, configura o remoto `origin`, cria um commit com as alterações e envia a branch escolhida. O script não usa `force push` e não grava tokens de acesso.
+
+Se preferir executar manualmente, use `git remote add origin <URL>` e `git push -u origin main`. O repositório do GitHub deve estar vazio para evitar conflitos no primeiro envio; a autenticação é feita pelo Git Credential Manager, pelo SSH ou pelo método configurado na sua máquina.
 
 O runtime atual usa Cloudflare Workers + D1 (`cloudflare:workers` e binding `DB`), que é o destino usado pelo Site publicado. A estrutura está documentada para migração futura ao Vercel, mas o backend não deve ser enviado ao Vercel sem trocar o binding D1 por um banco HTTP compatível, como Supabase/Postgres, e ajustar os handlers de autenticação. Essa separação evita publicar uma build que pareça funcionar, mas não consiga persistir sessões.
 
