@@ -15,7 +15,7 @@ if errorlevel 1 (
 
 set "REPO_URL="
 set /p "REPO_URL=URL do repositorio GitHub (HTTPS ou SSH): "
-if not defined REPO_URL (
+if "%REPO_URL%"=="" (
     echo A URL do repositorio e obrigatoria.
     goto :fail
 )
