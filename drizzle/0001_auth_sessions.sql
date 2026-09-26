@@ -1,3 +1,3 @@
-CREATE TABLE `users` (`id` text PRIMARY KEY NOT NULL, `name` text NOT NULL, `email` text NOT NULL UNIQUE, `password_hash` text NOT NULL, `password_salt` text NOT NULL, `role` text NOT NULL DEFAULT 'attendant', `company_id` text NOT NULL, `created_at` integer NOT NULL);
+CREATE TABLE `users` (`id` text PRIMARY KEY NOT NULL, `name` text NOT NULL, `email` text NOT NULL UNIQUE, `password_hash` text NOT NULL, `password_salt` text NOT NULL, `current_session_hash` text, `role` text NOT NULL DEFAULT 'attendant', `company_id` text NOT NULL, `created_at` integer NOT NULL);
 CREATE TABLE `sessions` (`id` text PRIMARY KEY NOT NULL, `user_id` text NOT NULL, `token_hash` text NOT NULL UNIQUE, `device_name` text, `browser` text, `ip_address` text, `created_at` integer NOT NULL, `last_activity` integer NOT NULL, `active` integer NOT NULL DEFAULT 1, `reason` text);
 CREATE INDEX `idx_sessions_user_active` ON `sessions` (`user_id`,`active`);

@@ -3,8 +3,8 @@
 ## Fluxo
 
 1. O usuário cria uma conta individual em `/api/auth` com nome, e-mail e senha.
-2. O primeiro cadastro da base recebe o perfil `manager`; os próximos escolhem `attendant` ou `manager`.
-3. O login invalida todas as sessões ativas do usuário e grava um novo token somente em hash.
+2. O primeiro cadastro da base recebe o perfil `manager`. Depois disso, somente gestores criam contas `attendant` pela API da equipe.
+3. O login troca o hash do token atual de forma atômica, invalida todas as sessões anteriores e grava um novo token somente em hash.
 4. O cookie `aeed_session` é enviado apenas por HTTPS, não pode ser lido por JavaScript e expira em 30 dias.
 5. O navegador consulta `/api/workspace` a cada 20 segundos. Se outro dispositivo fizer login, a sessão antiga recebe `401`, mostra a mensagem de encerramento e retorna à tela de login.
 

@@ -20,9 +20,9 @@ Configure `OPENAI_API_KEY` como segredo do Site. `OPENAI_MODEL` é opcional (pad
 A política do assistente proíbe inventar condições e orienta consultar o cadastro da empresa; a revisão humana antes do envio continua necessária. O aplicativo não envia mensagens a clientes.
 
 ## Acesso e sessão única
-As tabelas `users` e `sessions` estão na migração `drizzle/0001_auth_sessions.sql`. Senhas nunca são salvas em texto: cada cadastro usa sal e hash SHA-256. O cookie `aeed_session` é HttpOnly, Secure e SameSite=Lax. No login, as sessões ativas do mesmo usuário são marcadas como inativas antes da criação do novo token. O cliente verifica a sessão a cada 20 segundos e encerra a interface quando recebe `401`.
+As tabelas `users` e `sessions` estão na migração `drizzle/0001_auth_sessions.sql`. Senhas nunca são salvas em texto: cada cadastro usa sal e PBKDF2-HMAC-SHA-256 com 600.000 iterações. O cookie `aeed_session` é HttpOnly, Secure e SameSite=Lax. No login, o hash do token atual é trocado atomicamente e todas as sessões anteriores deixam de ser aceitas. O cliente verifica a sessão a cada 20 segundos e encerra a interface quando recebe `401`.
 
-O primeiro cadastro recebe o perfil gestor. Os próximos cadastros podem ser atendentes ou gestores; atendentes não veem a área de gestão e a API `/api/team` rejeita esse perfil. Para aplicar a migração em um ambiente D1 existente, rode `wrangler d1 migrations apply DB --remote` depois de publicar o arquivo SQL.
+O primeiro cadastro recebe o perfil gestor. Depois disso, somente gestores criam contas de atendente pela API `/api/team`; atendentes não veem a área de gestão. Para aplicar a migração em um ambiente D1 existente, rode `wrangler d1 migrations apply DB --remote` depois de publicar o arquivo SQL.
 
 ## GitHub e Vercel
 O código está organizado como um repositório Git comum, com lockfile preservado e um workflow de verificação em `.github/workflows/ci.yml`. Para publicar uma cópia no GitHub, crie um repositório vazio e execute `git remote add origin <URL>` e `git push -u origin main`.
