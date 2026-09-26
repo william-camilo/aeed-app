@@ -15,14 +15,14 @@ if errorlevel 1 (
 
 set "REPO_URL="
 set /p "REPO_URL=URL do repositorio GitHub (HTTPS ou SSH): "
-if "%REPO_URL%"=="" (
+if "%REPO_URL: =%"=="" (
     echo A URL do repositorio e obrigatoria.
     goto :fail
 )
 
 set "BRANCH=main"
 set /p "BRANCH=Nome da branch [main]: "
-if not defined BRANCH set "BRANCH=main"
+if "%BRANCH: =%"=="" set "BRANCH=main"
 
 git rev-parse --is-inside-work-tree >nul 2>&1
 if errorlevel 1 (
@@ -37,7 +37,7 @@ if errorlevel 1 goto :fail
 set "CURRENT_REMOTE="
 for /f "delims=" %%R in ('git remote get-url origin 2^>nul') do set "CURRENT_REMOTE=%%R"
 
-if defined CURRENT_REMOTE (
+if not "!CURRENT_REMOTE!"=="" (
     echo.
     echo O remoto origin atual e: !CURRENT_REMOTE!
     choice /C SN /N /M "Substituir origin pela URL informada? [S/N]: "
@@ -60,15 +60,15 @@ git diff --cached --quiet
 if errorlevel 1 (
     set "COMMIT_MESSAGE=Publicar AEED no GitHub"
     set /p "COMMIT_MESSAGE=Mensagem do commit [Publicar AEED no GitHub]: "
-    if not defined COMMIT_MESSAGE set "COMMIT_MESSAGE=Publicar AEED no GitHub"
+    if "!COMMIT_MESSAGE: =!"=="" set "COMMIT_MESSAGE=Publicar AEED no GitHub"
 
     rem Usa um autor local apenas se o Git ainda nao tiver identidade configurada.
     set "GIT_NAME="
     set "GIT_EMAIL="
     for /f "delims=" %%N in ('git config user.name 2^>nul') do set "GIT_NAME=%%N"
     for /f "delims=" %%E in ('git config user.email 2^>nul') do set "GIT_EMAIL=%%E"
-    if not defined GIT_NAME set "GIT_NAME=AEED"
-    if not defined GIT_EMAIL set "GIT_EMAIL=aeed@users.noreply.github.com"
+    if "!GIT_NAME: =!"=="" set "GIT_NAME=AEED"
+    if "!GIT_EMAIL: =!"=="" set "GIT_EMAIL=aeed@users.noreply.github.com"
 
     git -c user.name="!GIT_NAME!" -c user.email="!GIT_EMAIL!" commit -m "!COMMIT_MESSAGE!"
     if errorlevel 1 goto :fail
