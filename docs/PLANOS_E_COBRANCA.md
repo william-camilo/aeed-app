@@ -32,3 +32,11 @@ Não armazenar dados de cartão no AEED. As credenciais secretas do provedor dev
 
 ## Banco de dados
 A publicação Vercel utiliza PostgreSQL Neon. O esquema está em migrations/postgres/001_initial.sql. Execute pnpm db:migrate antes da primeira publicação. As migrações D1 antigas foram mantidas como histórico.
+
+## Janela inicial de planos
+
+A página inicial consulta a sessão antes de renderizar os planos. Visitantes veem a janela com os três planos, escolha para cadastro e entrada para quem já possui conta. Contas autenticadas com assinatura active e administradores entram diretamente no painel. Estados pending, past_due e canceled exibem um lembrete de regularização; não são convertidos em active pelo navegador. Não há sinalizador de compra em localStorage ou parâmetro de URL.
+
+A cobrança ainda não está conectada: os botões informam que o cadastro é de demonstração e não há pagamento nessa etapa. A integração futura deve confirmar compras por webhook autenticado no servidor e atualizar o estado da assinatura; só então será possível reconhecer pagamento real. O estado active dos cadastros atuais é demonstrativo e não comprova pagamento.
+
+Os campos de acesso começam vazios, desestimulam autofill e ficam somente leitura até receber foco. O exemplo público de login admin foi removido. Gerenciadores de senhas podem ignorar essas preferências; nesse caso, remova a credencial salva para o domínio nas configurações do navegador.
