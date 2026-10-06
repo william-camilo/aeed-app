@@ -1,4 +1,4 @@
-import { env } from '@/lib/env';
+import { env, aiEnabled } from '@/lib/env';
 import { z } from 'zod';
 import { database, identity, sameOrigin } from '@/lib/db';
 import { emptyCompany,guided,trainingCases,stages } from '@/lib/method';
@@ -18,7 +18,7 @@ if(v.kind==='training'){
  const id=crypto.randomUUID();await db.prepare('INSERT INTO practices(id,user_id,created_at,scenario,answer,review) VALUES(?,?,?,?,?,?)').bind(id,user,Date.now(),scenario.title,v.message,JSON.stringify(review)).run();return respond({id,...review});
 }
 let result;
-if(!env.OPENAI_API_KEY||v.guided){result=guided(v,company);}else{
+if(!aiEnabled||v.guided){result=guided(v,company);}else{
  const response=await fetch('https://api.openai.com/v1/responses',{method:'POST',headers:{Authorization:`Bearer ${env.OPENAI_API_KEY}`,'Content-Type':'application/json'},signal:AbortSignal.timeout(40000),body:JSON.stringify({model:env.OPENAI_MODEL||'gpt-4.1-mini',store:false,instructions:prompt,input:JSON.stringify({company,conversation:v,reference:excerpts(v.message+' '+v.situation+' '+v.need)}),text:{format:{type:'json_schema',name:'aeed_analysis',strict:true,schema}},max_output_tokens:1500})});
  if(!response.ok)return respond({error:'A IA não conseguiu concluir a análise. Seus dados foram preservados. Tente novamente ou use o modo guiado.'},502);
  const body=await response.json() as any;const raw=body.output?.flatMap((x:any)=>x.content||[]).filter((x:any)=>x.type==='output_text').map((x:any)=>x.text).join('');if(body.status!=='completed'||!raw)return respond({error:'A IA não concluiu uma resposta válida. Tente novamente ou use o modo guiado.'},502);

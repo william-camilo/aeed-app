@@ -21,7 +21,7 @@ Não guardar credenciais no Git. Para trocar a senha administrativa, atualizar o
 e publicar novamente. A conta administrativa fica em uma organização própria; não oferece
 acesso global aos dados das empresas clientes.
 
-`OPENAI_API_KEY` e `OPENAI_MODEL` habilitam a análise por IA. Sem chave, o modo guiado permanece disponível.
+`AEED_AI_ENABLED=true` e uma `OPENAI_API_KEY` válida habilitam a análise por IA. `OPENAI_MODEL` é opcional. Por padrão, o sistema usa apenas o modo guiado, mesmo com a chave salva, e não chama a OpenAI. Para reativar a IA após habilitar os créditos da API, configure `AEED_AI_ENABLED=true` na Vercel e publique uma nova versão. Remova essa variável ou defina `false` para voltar ao modo guiado.
 
 ## Banco e verificação
 
