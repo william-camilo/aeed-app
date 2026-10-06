@@ -31,5 +31,4 @@ Para ativar cobrança em produção, integrar um provedor (por exemplo, Mercado 
 Não armazenar dados de cartão no AEED. As credenciais secretas do provedor devem ser configuradas como variáveis seguras no ambiente de produção.
 
 ## Banco de dados
-
-A migração `0002_billing_plans.sql` adiciona `plan` e `subscription_status` à tabela de usuários, mantém as contas existentes ativas e migra gestores antigos para Equipe. Antes de publicar esta versão, aplicar as migrações pendentes ao banco D1 do ambiente de produção.
+A publicação Vercel utiliza PostgreSQL Neon. O esquema está em migrations/postgres/001_initial.sql. Execute pnpm db:migrate antes da primeira publicação. As migrações D1 antigas foram mantidas como histórico.

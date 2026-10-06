@@ -1,4 +1,4 @@
-import { env } from 'cloudflare:workers';
+import { env } from '@/lib/env';
 import { z } from 'zod';
 import { database, identity, sameOrigin } from '@/lib/db';
 import { emptyCompany,guided,trainingCases,stages } from '@/lib/method';
